@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <string>
 #include <iomanip>
@@ -16,8 +17,9 @@ int main() {
     char member;
     string cashierNotes;
 
-    // Sets fixed-point notation to display two decimal places for currency
-    cout << fixed << setprecision(2);
+    // 1. User Input
+    cout << "Enter food name: ";
+    getline(cin, foodName);
 
     // 1. Menu Display
     cout << "Drink\t\t\tSmall (s)\tMedium (m)\tLarge (l)\n";
@@ -135,39 +137,37 @@ int main() {
     cout << "Member (y/n): ";
     cin >> member;
 
-    // Clears the trailing newline character from the stream buffer before getline
+    // Clear newline character so getline() does not skip
     cin.ignore();
 
     cout << "Enter cashier notes: ";
     getline(cin, cashierNotes);
 
-    // 6. Subtotal, Discount, and Tax Calculations
+    // 2. Calculations
     double subtotal = quantity * unitPrice;
     double discount = 0.0;
     string memberStatus;
-    bool isMember = (member == 'y' || member == 'Y');
 
-    if (isMember) {
+    if (member == 'y' || member == 'Y') {
         memberStatus = "Member";
-        discount = subtotal * 0.10;
+        discount = subtotal * 0.10; // 10% member discount
     }
     else {
         memberStatus = "Not Member";
         discount = 0.0;
     }
 
-    if (!isMember && quantity >= 10) {
-        cout << "Notice: Member discount would apply to bulk purchases.\n";
-    }
-
     double discountedSubtotal = subtotal - discount;
-    double taxRate = 0.07;
+    double taxRate = 0.07; // 7% sales tax
     double tax = discountedSubtotal * taxRate;
     double total = discountedSubtotal + tax;
 
-    // 7. Receipt Output
+    // 3. Receipt Output
+    cout << fixed << setprecision(2);
+
     cout << "\nReceipt\n";
-    cout << "Food: " << foodName << " (" << sizeName << ")\n";
+    cout << "Food: " << foodName << endl;
+    cout << "Code: " << itemCode << endl;
     cout << "Quantity: " << quantity << endl;
     cout << "Unit Price: $" << unitPrice << endl;
     cout << "Subtotal: $" << subtotal << endl;
@@ -177,14 +177,16 @@ int main() {
     cout << "Total: $" << total << endl;
     cout << "Notes: " << cashierNotes << endl;
 
-    // 8. Inventory Audit Table
+    // 4. Inventory Audit Table
     cout << "\nInventory Audit\n";
-    cout << left << setw(16) << "Item"
+    cout << left << setw(6) << "Code"
+        << left << setw(16) << "Item"
         << right << setw(6) << "Qty"
         << right << setw(10) << "Price"
         << right << setw(10) << "Total" << endl;
 
-    cout << left << setw(16) << foodName
+    cout << left << setw(6) << itemCode
+        << left << setw(16) << foodName
         << right << setw(6) << quantity
         << right << setw(10) << unitPrice
         << right << setw(10) << subtotal << endl;
